@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Misti 💙</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Caveat:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at center, #ffffff 0%, #f8f2ff 60%, #ece0fa 100%);
+      color: #1f192f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating Background Emojis */
+    .floating-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .float-emoji {
+      position: absolute;
+      font-size: 1.4rem;
+      opacity: 0.55;
+      animation: floatAround 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatAround {
+      0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+      50% { transform: translateY(-25px) translateX(15px) rotate(8deg); }
+      100% { transform: translateY(15px) translateX(-15px) rotate(-8deg); }
+    }
+
+    /* Main Card Container */
+    .stage {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 650px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Sticker Card */
+    .sticker-box {
+      width: 155px;
+      height: 155px;
+      background: #ffffff;
+      border-radius: 26px;
+      box-shadow: 0 12px 30px rgba(95, 65, 160, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-size: 4.5rem;
+      overflow: hidden;
+    }
+
+    .sticker-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: #201a30;
+      margin-bottom: 0.75rem;
+    }
+
+    .handwritten {
+      font-family: 'Caveat', cursive;
+      font-size: 1.55rem;
+      color: #4a435a;
+      min-height: 2.2rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .subtext {
+      font-size: 1rem;
+      color: #5c5470;
+      margin-bottom: 1.6rem;
+    }
+
+    /* Primary Purple Button */
+    .btn-primary {
+      background: linear-gradient(135deg, #6b46c1, #4c2896);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2.1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(91, 52, 175, 0.32);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, width 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(91, 52, 175, 0.42);
+    }
+
+    .hidden-btn {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .hidden-btn.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Envelope Screen */
+    .envelope-wrapper {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      background: #f5b915;
+      border-radius: 12px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14);
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.6s ease;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 150px solid transparent;
+      border-right: 150px solid transparent;
+      border-top: 105px solid #ffd03b;
+      transform-origin: top;
+      transition: transform 0.6s ease;
+      z-index: 3;
+    }
+
+    .envelope-wrapper.open .envelope-flap {
+      transform: rotateX(180deg);
+    }
+
+    .wax-seal {
+      z-index: 4;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #d64535;
+      color: #fff;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+      margin-bottom: 1rem;
+    }
+
+    .unseal-btn {
+      z-index: 4;
+      background: rgba(255, 255, 255, 0.88);
+      border: none;
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Letter & Forgive Screen */
+    .letter-card {
+      width: 100%;
+      max-width: 500px;
+      background: #f3f7e9;
+      border-left: 4px solid #3b82f6;
+      border-radius: 14px;
+      padding: 1.5rem 1.75rem;
+      text-align: left;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .letter-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      margin-bottom: 0.65rem;
+      color: #1e293b;
+    }
+
+    .letter-body {
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem;
+      color: #334155;
+      min-height: 3.2rem;
+      line-height: 1.35;
+    }
+
+    .letter-sign {
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      text-align: right;
+      margin-top: 0.6rem;
+      color: #1e293b;
+    }
+
+    .forgive-box {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 440px;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .progress-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      color: #475569;
+      margin: 0.4rem 0;
+    }
+
+    .progress-track {
+      width: 240px;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 0.35rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 35%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 99px;
+      transition: width 0.35s ease;
+    }
+
+    .progress-status {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+
+    .btn-secondary {
+      margin-top: 0.75rem;
+      background: #e2e8f0;
+      color: #475569;
+      border: none;
+      padding: 0.45rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .waiting-note {
+      margin-top: 1.1rem;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    /* Final Polaroid Gallery Screen */
+    .polaroid-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 1.8rem 0;
+    }
+
+    .polaroid {
+      background: #fff;
+      padding: 0.6rem 0.6rem 1.6rem 0.6rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      width: 145px;
+      transition: transform 0.3s ease;
+    }
+
+    .polaroid:nth-child(1) { transform: rotate(-6deg); }
+    .polaroid:nth-child(2) { transform: rotate(2deg) translateY(-6px); }
+    .polaroid:nth-child(3) { transform: rotate(7deg); }
+
+    .polaroid:hover {
+      transform: scale(1.06) rotate(0deg);
+      z-index: 5;
+    }
+
+    .polaroid img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .quote-pill {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 0.85rem 1.4rem;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      color: #475569;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      max-width: 440px;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      top: -10px;
+      animation: fall 3.5s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(105vh) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Background Emojis -->
+  <div class="floating-container">
+    <span class="float-emoji" style="top: 12%; left: 15%;">🥺</span>
+    <span class="float-emoji" style="top: 20%; right: 18%; animation-delay: 1s;">💜</span>
+    <span class="float-emoji" style="bottom: 18%; left: 12%; animation-delay: 2s;">❤️</span>
+    <span class="float-emoji" style="bottom: 22%; right: 14%; animation-delay: 1.5s;">🙏</span>
+    <span class="float-emoji" style="top: 48%; left: 8%; animation-delay: 0.7s;">💙</span>
+    <span class="float-emoji" style="top: 10%; left: 50%; animation-delay: 2.3s;">💖</span>
+  </div>
+
+  <div class="stage">
+    <!-- Screen 1 -->
+    <div class="screen active" id="screen-1">
+      <div class="sticker-box">🧸</div>
+      <h1>Misti, 💕 I Have Something to Say 🥺</h1>
+      <p class="subtext">I just want a chance to say this properly.</p>
+      <button class="btn-primary" onclick="goToScreen(2, 'type-2', 'I never wanted to be the reason you felt this way. 😔❤️', 'btn-2')">
+        Hear me out 💗
+      </button>
+    </div>
+
+    <!-- Screen 2 -->
+    <div class="screen" id="screen-2">
+      <div class="sticker-box">🐻‍❄️🤎</div>
+      <h1>I Know I Hurt You</h1>
+      <p class="handwritten" id="type-2"></p>
+      <button class="btn-primary hidden-btn" id="btn-2" onclick="goToScreen(3, 'type-3', 'I want to do better, not just say sorry. ✨', 'btn-3')">
+        Next →
+      </button>
+    </div>
+
+    <!-- Screen 3 -->
+    <div class="screen" id="screen-3">
+      <div class="sticker-box">🐱🥺</div>
+      <h1>You Mean Everything</h1>
+      <p class="handwritten" id="type-3"></p>
+      <button class="btn-primary hidden-btn" id="btn-3" onclick="goToScreen(4, 'type-4', 'I want to make it up to you... 🥺❤️', 'btn-4')">
+        Next →
+      </button>
+    </div>
+
+    <!-- Screen 4 -->
+    <div class="screen" id="screen-4">
+      <div class="sticker-box">🐼🙏</div>
+      <h1>I'm Truly Sorry</h1>
+      <p class="handwritten" id="type-4"></p>
+      <button class="btn-primary hidden-btn" id="btn-4" onclick="goToScreen(5)">
+        Next →
+      </button>
+    </div>
+
+    <!-- Screen 5: Envelope -->
+    <div class="screen" id="screen-5">
+      <p class="subtext">I wanted to say this the right way, here it goes...</p>
+      <div class="envelope-wrapper" id="envelope">
+        <div class="envelope-flap"></div>
+        <div class="wax-seal">S</div>
+        <button class="unseal-btn" onclick="openEnvelope()">Unseal it ❤️</button>
+      </div>
+    </div>
+
+    <!-- Screen 6: Letter & Forgiveness -->
+    <div class="screen" id="screen-6">
+      <div class="letter-card">
+        <h2>Hi Misti, 💙</h2>
+        <div class="letter-body" id="type-letter"></div>
+        <div class="letter-sign" id="letter-sign" style="opacity:0;">— Sourav 💙</div>
+      </div>
+
+      <div class="forgive-box" id="forgive-box">
+        <h2 style="font-family:'Playfair Display',serif; margin-bottom:0.3rem;">Can you forgive me? 🥺</h2>
+        <div class="progress-label">💙 HOW CLOSE ARE WE?</div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-status" id="progress-status">Take your time...</div>
+
+        <button class="btn-primary" id="forgive-btn" style="width: 220px;" onclick="forgiveAccepted()">
+          I forgive you 💜
+        </button>
+        <button class="btn-secondary" id="nudge-btn" onclick="nudgeForgive()">
+          Next 🤍
+        </button>
+        <div class="waiting-note">💙 Sourav is right here, waiting...</div>
+      </div>
+    </div>
+
+    <!-- Screen 7: Final Celebration -->
+    <div class="screen" id="screen-7">
+      <h1>You have no idea what this means 💙</h1>
+      <p class="subtext">You just made my day 🙏 — Sourav</p>
+
+      <div class="polaroid-row">
+        <!-- Apni photos lagane ke liye src="..." mein apni photo ka link ya file name daalein -->
+        <div class="polaroid">
+          <img src="src/photo1.jpeg"/>
+        </div>
+        <div class="polaroid">
+          <img src="src/photo2.jpeg" />
+        </div>
+        <div class="polaroid">
+          <img src="src/photo3.jpeg" />
+        </div>
+      </div>
+
+      <div class="quote-pill">
+        some bonds are worth fixing,even after the hardest fight — it's about always coming back 🙏
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goToScreen(num, typeId, text, btnId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('screen-' + num);
+      target.classList.add('active');
+
+      if (typeId && text) {
+        typeText(typeId, text, () => {
+          if (btnId) document.getElementById(btnId).classList.add('show');
+        });
+      }
+    }
+
+    function typeText(elementId, text, callback) {
+      const el = document.getElementById(elementId);
+      el.textContent = '';
+      let i = 0;
+      const timer = setInterval(() => {
+        el.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(timer);
+          if (callback) callback();
+        }
+      }, 45);
+    }
+
+    function openEnvelope() {
+      const env = document.getElementById('envelope');
+      env.classList.add('open');
+      setTimeout(() => {
+        goToScreen(6);
+        typeText(
+          'type-letter',
+          'I let my ego talk when my heart just wanted peace. I choose us.',
+          () => {
+            document.getElementById('letter-sign').style.opacity = 1;
+            setTimeout(() => {
+              document.getElementById('forgive-box').style.display = 'flex';
+            }, 400);
+          }
+        );
+      }, 650);
+    }
+
+    let nudgeStep = 0;
+    const messages = [
+      "Almost there — but only if you're ready",
+      "Whenever you're ready... ✨",
+      "My heart is all yours 💙"
+    ];
+
+    function nudgeForgive() {
+      nudgeStep++;
+      const fill = document.getElementById('progress-fill');
+      const status = document.getElementById('progress-status');
+      const forgiveBtn = document.getElementById('forgive-btn');
+      const nudgeBtn = document.getElementById('nudge-btn');
+
+      if (nudgeStep === 1) {
+        fill.style.width = '68%';
+        status.textContent = messages[0];
+        forgiveBtn.style.width = '280px';
+      } else if (nudgeStep === 2) {
+        fill.style.width = '100%';
+        status.textContent = messages[1];
+        forgiveBtn.style.width = '340px';
+        nudgeBtn.style.display = 'none';
+      }
+    }
+
+    function forgiveAccepted() {
+      goToScreen(7);
+      launchConfetti();
+    }
+
+    function launchConfetti() {
+      const colors = ['#f43f5e', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
+      for (let i = 0; i < 45; i++) {
+        const conf = document.createElement('div');
+        conf.className = 'confetti';
+        conf.style.left = Math.random() * 100 + 'vw';
+        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        conf.style.animationDelay = (Math.random() * 1.5) + 's';
+        document.body.appendChild(conf);
+      }
+    }
+  </script>
+</body>
+</html>
